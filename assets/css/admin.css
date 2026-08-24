@@ -10,7 +10,7 @@ body.admin{background:var(--ink);}
   color:var(--text-dim);font-size:.9rem;margin-bottom:4px;
 }
 .admin-sidebar nav a:hover,.admin-sidebar nav a.active{background:var(--ink-3);color:var(--text);}
-.admin-main{flex:1;padding:32px 40px;max-width:1100px;}
+.admin-main{flex:1;padding:32px 40px;max-width:1420px;width:100%;}
 .admin-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;}
 .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
 .stat-card{
@@ -33,7 +33,7 @@ body.admin{background:var(--ink);}
 .status-badge.published{background:rgba(79,211,255,.12);color:var(--sky);}
 .status-badge.draft{background:rgba(255,180,84,.12);color:var(--amber);}
 
-.editor-grid{display:grid;grid-template-columns:1fr 300px;gap:28px;align-items:start;}
+.editor-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start;}
 .field{margin-bottom:18px;}
 .editor-toolbar{
   display:flex;gap:4px;flex-wrap:wrap;border:1px solid var(--line);border-bottom:none;
@@ -45,11 +45,19 @@ body.admin{background:var(--ink);}
 }
 .editor-toolbar button:hover{background:var(--ink-2);color:var(--sky);}
 .editor-canvas{
-  min-height:340px;border:1px solid var(--line);border-radius:0 0 8px 8px;
+  min-height:480px;overflow-wrap:anywhere;word-break:break-word;white-space:normal;
+  min-width:0;border:1px solid var(--line);border-radius:0 0 8px 8px;
   padding:16px;background:var(--ink-3);color:var(--text);line-height:1.6;
 }
 .editor-canvas:focus{outline:none;border-color:var(--sky);}
-.editor-canvas img{max-width:100%;border-radius:8px;}
+.editor-canvas img{max-width:100%;height:auto;border-radius:8px;}
+.editor-canvas pre{max-width:100%;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;}
+.editor-canvas a{overflow-wrap:anywhere;word-break:break-word;}
+.attachment-card{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:12px 0;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;}
+.attachment-card .attachment-icon{font-size:1.2rem;flex-shrink:0;}
+.attachment-card .attachment-meta{min-width:0;}
+.attachment-card .attachment-meta a{color:var(--sky);font-weight:600;overflow-wrap:anywhere;word-break:break-word;}
+.attachment-card .attachment-type{font-size:.75rem;color:var(--text-dim);margin-top:2px;}
 .side-panel{
   background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:18px;
 }

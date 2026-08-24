@@ -62,8 +62,8 @@
     }
   }
 
-  async function uploadDataUrl(dataUrl, filename){
-    return apiPost("uploadImage", {token:token(), dataUrl, filename});
+  async function uploadDataUrl(dataUrl, filename, action="uploadImage"){
+    return apiPost(action, {token:token(), dataUrl, filename});
   }
 
   const Store = {
@@ -88,7 +88,8 @@
     async savePost(post){ return apiPost("savePost", {token:token(), post}); },
     async deletePost(id){ return apiPost("deletePost", {token:token(), id}); },
     async incrementViews(slug){ return apiPost("view", {slug}); },
-    async uploadImage(dataUrl, filename){ return uploadDataUrl(dataUrl, filename); },
+    async uploadImage(dataUrl, filename){ return uploadDataUrl(dataUrl, filename, "uploadImage"); },
+    async uploadAsset(dataUrl, filename){ return uploadDataUrl(dataUrl, filename, "uploadAsset"); },
     async submitContribution(submission){ return apiPost("submitContribution", {submission}); },
     async reviewSubmission(id, decision, notes){ return apiPost("reviewSubmission", {token:token(), id, decision, notes}); },
     slugify: localSlugify,
