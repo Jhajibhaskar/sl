@@ -18,7 +18,17 @@
   async function parseResponse(res){
     const text = await res.text();
     let body;
-    try { body = JSON.parse(text); } catch(e){ throw new Error("Backend returned invalid JSON."); }
+    try {
+      body = JSON.parse(text);
+    } catch(e) {
+      console.error("Salesforce Lab backend returned non-JSON:", text);
+      const preview = text.replace(/\\s+/g, " ").slice(0, 240);
+      throw new Error(
+        "Backend returned invalid JSON (HTTP " + res.status + "). " +
+        "Make sure the Apps Script Web App is deployed as /exec with access for Anyone. " +
+        (preview ? "Response: " + preview : "")
+      );
+    }
     if (!body.ok) {
       const err = new Error(body.error || "Request failed.");
       err.code = body.code || "ERROR";
@@ -63,7 +73,11 @@
   }
 
   async function uploadDataUrl(dataUrl, filename, action="uploadImage"){
-    return apiPost(action, {token:token(), dataUrl, filename});
+    const url = await apiPost(action, {token:token(), dataUrl, filename});
+    if (typeof url !== "string" || !/^https:\\/\\/(drive\\.google\\.com|lh3\\.googleusercontent\\.com)\\//i.test(url)) {
+      throw new Error("Upload succeeded, but Google Drive did not return a valid file URL.");
+    }
+    return url;
   }
 
   const Store = {
