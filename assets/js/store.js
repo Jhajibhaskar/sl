@@ -62,29 +62,71 @@
     }
   }
 
+  function normalizeFileUrl(value){
+    if (typeof value === "string") return value.trim();
+    if (value && typeof value === "object") {
+      const candidate = value.url || value.imageUrl || value.fileUrl || value.thumbnailUrl || value.downloadUrl;
+      if (typeof candidate === "string") return candidate.trim();
+    }
+    return "";
+  }
+
+  function isGoogleHostedFileUrl(url){
+    return /^https?:\/\/(drive\.google\.com|lh3\.googleusercontent\.com)\//i.test(url);
+  }
+
+
+  function normalizePostImage(post){
+    if (!post || typeof post !== "object") return post;
+    const copy = {...post};
+    const url = normalizeFileUrl(copy.image);
+    copy.image = isGoogleHostedFileUrl(url) ? url : "";
+    return copy;
+  }
+
+  function normalizePosts(posts){
+    if (!Array.isArray(posts)) return posts;
+    return posts.map(normalizePostImage);
+  }
+
   async function uploadDataUrl(dataUrl, filename, action="uploadImage"){
-    return apiPost(action, {token:token(), dataUrl, filename});
+    const result = await apiPost(action, {token:token(), dataUrl, filename});
+    const url = normalizeFileUrl(result);
+
+    console.log("Salesforce Lab upload result:", result);
+    console.log("Salesforce Lab normalized file URL:", url);
+
+    if (!url || !isGoogleHostedFileUrl(url)) {
+      throw new Error("Upload succeeded, but Google Drive did not return a valid file URL.");
+    }
+
+    return url;
   }
 
   const Store = {
     async getPosts(opts={}){
-      return apiGet("list", {
+      return normalizePosts(await apiGet("list", {
         category: opts.category,
         tag: opts.tag,
         q: opts.q,
         limit: opts.limit
-      });
+      }));
     },
-    async getPostBySlug(slug){ return apiGet("get", {slug}); },
+    async getPostBySlug(slug){ return normalizePostImage(await apiGet("get", {slug})); },
     async getPostById(id){
-      const all = await apiGet("adminList", {token:token()});
+      const all = normalizePosts(await apiGet("adminList", {token:token()}));
       return all.find(p=>p.id===id) || null;
     },
     async getCategories(){ return apiGet("categories"); },
     async getTags(){ return apiGet("tags"); },
     async getArchive(){ return apiGet("archive"); },
-    async getAllPosts(){ return apiGet("adminList", {token:token()}); },
-    async getSubmissions(){ return apiGet("submissions", {token:token()}); },
+    async getAllPosts(){ return normalizePosts(await apiGet("adminList", {token:token()})); },
+    async getSubmissions(){
+      const items = await apiGet("submissions", {token:token()});
+      return Array.isArray(items) ? items.map(function(item){
+        return {...item, image: normalizeFileUrl(item && item.image)};
+      }) : items;
+    },
     async savePost(post){ return apiPost("savePost", {token:token(), post}); },
     async deletePost(id){ return apiPost("deletePost", {token:token(), id}); },
     async incrementViews(slug){ return apiPost("view", {slug}); },
