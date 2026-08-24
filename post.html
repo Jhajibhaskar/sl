@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title id="page-title">Article — Salesforce Lab</title><link rel="stylesheet" href="assets/css/style.css"><link rel="stylesheet" href="assets/css/article.css"></head>
+<body><header id="site-header"></header><div id="article-root"></div><div class="related wrap" id="related-root"></div><footer id="site-footer"></footer>
+<script src="assets/js/layout.js"></script><script src="assets/js/store.js"></script>
+<script>
+(async function(){
+  Layout.mount(); const slug=new URLSearchParams(location.search).get('slug'); const root=document.getElementById('article-root');
+  try{
+    const post=slug?await Store.getPostBySlug(slug):null;
+    if(!post){ throw new Error('Post not found'); }
+    Store.incrementViews(post.slug).catch(()=>{});
+    document.getElementById('page-title').textContent=post.title+' — Salesforce Lab';
+    root.innerHTML=`<div class="article-head wrap"><span class="cat-tag">${Layout.escape(post.category||'')}</span><h1>${Layout.escape(post.title)}</h1><div class="meta-row" style="margin-top:10px;"><span>${Layout.timeAgo(post.publishedDate)}</span><span class="dot"></span><span>${post.readTime||5} min read</span><span class="dot"></span><span>${Layout.escape(post.difficulty||'Beginner')}</span></div>${post.image?`<img class="article-hero-img" src="${Layout.escape(post.image)}" alt="">`:''}</div><div class="article-body">${Layout.sanitizeHTML(post.content||'')}<div class="tag-row">${(post.tags||[]).map(t=>`<a class="tag-chip" href="tag.html?tag=${encodeURIComponent(t)}">#${Layout.escape(t)}</a>`).join('')}</div><div class="author-box"><div class="author-avatar"></div><div><div class="name">${Layout.escape(post.author||'Owner')}</div><div class="role">Salesforce Lab</div></div></div></div>`;
+    const related=await Store.getPosts({category:post.category,limit:4});
+    const rel=related.filter(p=>p.slug!==post.slug).slice(0,3);
+    if(rel.length) document.getElementById('related-root').innerHTML=`<div class="section-head"><h2>More in ${Layout.escape(post.category||'')}</h2></div><div class="post-grid">${rel.map(p=>`<a class="card" href="post.html?slug=${encodeURIComponent(p.slug)}"><div class="fig">${p.image?`<img src="${Layout.escape(p.image)}" alt="">`:''}<span class="fig-cat">${Layout.escape(p.category||'')}</span></div><div class="body"><h3>${Layout.escape(p.title)}</h3><p>${Layout.escape(p.excerpt||'')}</p></div></a>`).join('')}</div>`;
+  }catch(e){ root.innerHTML=`<div class="wrap" style="padding:60px 24px;"><div class="empty-state"><h3>Post not found</h3><p>The article may be unpublished or the backend is unavailable.</p><a href="index.html" class="btn btn-primary" style="margin-top:10px;">Back to home</a></div></div>`; }
+})();
+</script></body></html>

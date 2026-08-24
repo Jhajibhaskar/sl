@@ -1,0 +1,83 @@
+body.admin{background:var(--ink);}
+.admin-shell{display:flex;min-height:100vh;}
+.admin-sidebar{
+  width:220px;flex-shrink:0;border-right:1px solid var(--line);
+  padding:24px 18px;background:var(--ink-2);
+}
+.admin-sidebar .brand{margin-bottom:32px;}
+.admin-sidebar nav a{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;
+  color:var(--text-dim);font-size:.9rem;margin-bottom:4px;
+}
+.admin-sidebar nav a:hover,.admin-sidebar nav a.active{background:var(--ink-3);color:var(--text);}
+.admin-main{flex:1;padding:32px 40px;max-width:1420px;width:100%;}
+.admin-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
+.stat-card{
+  background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:20px;
+}
+.stat-card .num{font-family:'Space Grotesk';font-size:2rem;font-weight:700;}
+.stat-card .lbl{font-size:.8rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace;text-transform:uppercase;}
+
+.post-row{
+  display:flex;align-items:center;gap:16px;padding:14px 16px;
+  border:1px solid var(--line);border-radius:10px;margin-bottom:10px;background:var(--ink-2);
+}
+.post-row .thumb{width:56px;height:56px;border-radius:8px;background:var(--ink-3);flex-shrink:0;object-fit:cover;}
+.post-row .info{flex:1;min-width:0;}
+.post-row .info h4{margin:0 0 4px;font-size:.98rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.status-badge{
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;text-transform:uppercase;
+  padding:3px 9px;border-radius:99px;letter-spacing:.04em;
+}
+.status-badge.published{background:rgba(79,211,255,.12);color:var(--sky);}
+.status-badge.draft{background:rgba(255,180,84,.12);color:var(--amber);}
+
+.editor-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start;}
+.field{margin-bottom:18px;}
+.editor-toolbar{
+  display:flex;gap:4px;flex-wrap:wrap;border:1px solid var(--line);border-bottom:none;
+  border-radius:8px 8px 0 0;background:var(--ink-3);padding:6px;
+}
+.editor-toolbar button{
+  background:transparent;border:none;color:var(--text-dim);width:32px;height:32px;
+  border-radius:6px;cursor:pointer;font-size:.9rem;font-weight:600;
+}
+.editor-toolbar button:hover{background:var(--ink-2);color:var(--sky);}
+.editor-canvas{
+  min-height:480px;overflow-wrap:anywhere;word-break:break-word;white-space:normal;
+  min-width:0;border:1px solid var(--line);border-radius:0 0 8px 8px;
+  padding:16px;background:var(--ink-3);color:var(--text);line-height:1.6;
+}
+.editor-canvas:focus{outline:none;border-color:var(--sky);}
+.editor-canvas img{max-width:100%;height:auto;border-radius:8px;}
+.editor-canvas pre{max-width:100%;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;}
+.editor-canvas a{overflow-wrap:anywhere;word-break:break-word;}
+.attachment-card{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:12px 0;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;}
+.attachment-card .attachment-icon{font-size:1.2rem;flex-shrink:0;}
+.attachment-card .attachment-meta{min-width:0;}
+.attachment-card .attachment-meta a{color:var(--sky);font-weight:600;overflow-wrap:anywhere;word-break:break-word;}
+.attachment-card .attachment-type{font-size:.75rem;color:var(--text-dim);margin-top:2px;}
+.side-panel{
+  background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:18px;
+}
+.img-preview{
+  width:100%;aspect-ratio:16/9;border-radius:8px;background:var(--ink-3);
+  border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;
+  color:var(--text-dim);font-size:.8rem;overflow:hidden;margin-bottom:10px;
+}
+.img-preview img{width:100%;height:100%;object-fit:cover;}
+.login-box{
+  max-width:360px;margin:14vh auto;background:var(--ink-2);border:1px solid var(--line);
+  border-radius:14px;padding:36px;
+}
+.hint{font-size:.78rem;color:var(--text-dim);margin-top:6px;}
+@media(max-width:900px){
+  .editor-grid{grid-template-columns:1fr;}
+  .admin-sidebar{display:none;}
+  .admin-main{padding:20px;}
+}
+
+/* Contributor review / public submission helpers */
+.side-panel .hint { line-height: 1.55; }
+.admin-main .article-body { color: var(--text, inherit); }

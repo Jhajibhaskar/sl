@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salesforce Lab — Build, Automate, Learn</title>
+<meta name="description" content="Practical Salesforce engineering: Apex, Flow, Agentforce and Data Cloud, explained simply.">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header id="site-header"></header>
+<section class="hero"><div class="wrap">
+  <div class="eyebrow">Build · Automate · Learn</div>
+  <h1>Salesforce engineering,<br><span class="accent">explained simply.</span></h1>
+  <p class="lead">Apex patterns, Flow architecture, Agentforce experiments, and the occasional war story — written for people who ship on the platform.</p>
+  <div class="pill-row" id="category-pills"></div>
+</div></section>
+<div class="wrap">
+  <div class="section-head"><h2>Featured</h2></div>
+  <a id="featured-post" class="featured" style="display:none;"></a>
+  <div class="section-head"><h2>Latest posts</h2><a href="archive.html" class="view-all">View archive →</a></div>
+  <div class="post-grid" id="post-grid"></div>
+  <div id="empty" class="empty-state" style="display:none;margin-top:20px;"><h3>No posts yet</h3><p>The next Salesforce article will appear here.</p><a href="submit.html" class="btn btn-primary" style="margin-top:10px;">Submit an article</a></div>
+</div>
+<footer id="site-footer" style="margin-top:70px;"></footer>
+<script src="assets/js/layout.js"></script><script src="assets/js/store.js"></script>
+<script>
+(async function(){
+  Layout.mount('home');
+  try {
+    const cats = await Store.getCategories();
+    document.getElementById('category-pills').innerHTML = `<a href="index.html" class="pill active">All</a>` + cats.map(c=>`<a href="category.html?cat=${encodeURIComponent(c.name)}" class="pill">${Layout.escape(c.name)} · ${c.count}</a>`).join('');
+    const posts = await Store.getPosts({limit:24});
+    const grid = document.getElementById('post-grid'), featuredEl = document.getElementById('featured-post');
+    if(!posts.length){ document.getElementById('empty').style.display='block'; return; }
+    const [featured,...rest] = posts;
+    featuredEl.style.display='grid'; featuredEl.href=`post.html?slug=${encodeURIComponent(featured.slug)}`;
+    featuredEl.innerHTML=`<div class="fig">${featured.image?`<img src="${Layout.escape(featured.image)}" alt="">`:''}</div><div class="body"><span class="cat-tag">${Layout.escape(featured.category||'')}</span><h3>${Layout.escape(featured.title)}</h3><p>${Layout.escape(featured.excerpt||'')}</p><div class="meta-row"><span>${Layout.timeAgo(featured.publishedDate)}</span><span class="dot"></span><span>${featured.readTime||5} min read</span></div><span class="cta-link">Read article <span class="arrow">→</span></span></div>`;
+    grid.innerHTML=rest.map(p=>`<a class="card" href="post.html?slug=${encodeURIComponent(p.slug)}"><div class="fig">${p.image?`<img src="${Layout.escape(p.image)}" alt="">`:''}<span class="fig-cat">${Layout.escape(p.category||'')}</span></div><div class="body"><h3>${Layout.escape(p.title)}</h3><p>${Layout.escape(p.excerpt||'')}</p><div class="meta-row"><span>${Layout.timeAgo(p.publishedDate)}</span><span class="dot"></span><span>${p.readTime||5} min read</span></div></div></a>`).join('');
+  } catch(err){ document.getElementById('post-grid').innerHTML=`<div class="empty-state"><h3>Backend not connected</h3><p>${Layout.escape(err.message)}</p></div>`; }
+})();
+</script>
+</body></html>
