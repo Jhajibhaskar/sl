@@ -19,7 +19,7 @@
   function footerHTML(){
     return `
     <div class="wrap">
-      <span>© ${new Date().getFullYear()} Salesforce Lab. Built with HTML, CSS, JS &amp; Google Apps Script.</span>
+      <span>© ${new Date().getFullYear()} Salesforce Lab. Built with HTML, CSS, JS &amp; Supabase.</span>
       <span><a href="submit.html" style="color:inherit;margin-right:14px;">Submit an article</a><a href="admin/login.html" style="color:inherit;">Owner sign in</a></span>
     </div>`;
   }
